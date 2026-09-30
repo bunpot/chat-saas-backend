@@ -9,7 +9,7 @@ services:
       - key: APP_ENV
         value: production
       - key: APP_KEY
-        generateValue: true
+        value: base64:Y2hhdC1zYWFzLWJhY2tlbmQ=
       - key: APP_URL
         value: https://chat-saas-api.onrender.com
       - key: DB_CONNECTION
