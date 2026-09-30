@@ -69,10 +69,7 @@ services:
       - key: APP_ENV
         value: production
       - key: APP_KEY
-        fromService:
-          type: web
-          name: chat-saas-api
-          property: envVars.APP_KEY
+        value: base64:Y2hhdC1zYWFzLWJhY2tlbmQ=
       - key: DB_CONNECTION
         value: pgsql
       - key: DB_HOST
