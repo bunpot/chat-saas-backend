@@ -1,0 +1,105 @@
+services:
+  - type: web
+    name: chat-saas-api
+    runtime: docker
+    plan: starter
+    dockerContext: .
+    dockerfilePath: ./docker/Dockerfile
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_KEY
+        generateValue: true
+      - key: APP_URL
+        value: https://chat-saas-api.onrender.com
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        fromDatabase:
+          name: chat-saas-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: chat-saas-db
+          property: port
+      - key: DB_DATABASE
+        fromDatabase:
+          name: chat-saas-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: chat-saas-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: chat-saas-db
+          property: password
+      - key: QUEUE_CONNECTION
+        value: database
+      - key: BROADCAST_DRIVER
+        value: reverb
+      - key: REVERB_APP_ID
+        generateValue: true
+      - key: REVERB_APP_KEY
+        generateValue: true
+      - key: REVERB_APP_SECRET
+        generateValue: true
+      - key: REVERB_HOST
+        value: chat-saas-api.onrender.com
+      - key: REVERB_PORT
+        value: 8080
+      - key: REVERB_SCHEME
+        value: https
+      - key: FRONTEND_URL
+        value: https://your-domain.com
+      - key: SESSION_DRIVER
+        value: database
+      - key: CACHE_DRIVER
+        value: file
+    healthCheckPath: /up
+
+  - type: worker
+    name: chat-saas-worker
+    runtime: docker
+    plan: starter
+    dockerContext: .
+    dockerfilePath: ./docker/Dockerfile
+    dockerCommand: php artisan queue:work --sleep=3 --tries=3
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_KEY
+        fromService:
+          type: web
+          name: chat-saas-api
+          property: envVars.APP_KEY
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        fromDatabase:
+          name: chat-saas-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: chat-saas-db
+          property: port
+      - key: DB_DATABASE
+        fromDatabase:
+          name: chat-saas-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: chat-saas-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: chat-saas-db
+          property: password
+      - key: QUEUE_CONNECTION
+        value: database
+
+databases:
+  - name: chat-saas-db
+    plan: starter
+    databaseName: chat_saas
+    user: chat_saas
