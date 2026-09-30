@@ -2,7 +2,7 @@ services:
   - type: web
     name: chat-saas-api
     runtime: docker
-    plan: starter
+    plan: free
     dockerContext: .
     dockerfilePath: ./docker/Dockerfile
     envVars:
@@ -61,7 +61,7 @@ services:
   - type: worker
     name: chat-saas-worker
     runtime: docker
-    plan: starter
+    plan: free
     dockerContext: .
     dockerfilePath: ./docker/Dockerfile
     dockerCommand: php artisan queue:work --sleep=3 --tries=3
@@ -97,6 +97,6 @@ services:
 
 databases:
   - name: chat-saas-db
-    plan: starter
+    plan: free
     databaseName: chat_saas
     user: chat_saas
